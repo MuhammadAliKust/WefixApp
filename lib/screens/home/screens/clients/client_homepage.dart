@@ -479,6 +479,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    widget.model.getShopsData();
     getUserName();
     return Scaffold(
       key: _scaffoldKey,
