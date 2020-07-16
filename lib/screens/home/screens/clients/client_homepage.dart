@@ -146,6 +146,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
                         builder: (context) => ShopDetails(
                               model: widget.model,
                               i: i,
+                              address: LawyerList[i]['address'],
                               image: LawyerList[i]['image'],
                               name: LawyerList[i]['name'],
                               email: LawyerList[i]['email'],
@@ -296,10 +297,6 @@ class _ClientHomePageState extends State<ClientHomePage> {
     setState(() {});
   }
 
- 
-
-  
-
   Widget _buildCard(BuildContext context, int i) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -317,17 +314,18 @@ class _ClientHomePageState extends State<ClientHomePage> {
       width: MediaQuery.of(context).size.width,
       height: 170,
       decoration: BoxDecoration(
-          color: Colors.green,
+          color: Colors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30), topRight: Radius.circular(30))),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-        child: Image.network(
-          LawyerList[i]['image'],
-          fit: BoxFit.cover,
-        ),
-      ),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          child: FadeInImage.assetNetwork(
+            placeholder: 'assets/img/loading.gif',
+            placeholderScale: 20,
+            image: LawyerList[i]['image'],
+            fit: BoxFit.cover,
+          )),
     );
   }
 

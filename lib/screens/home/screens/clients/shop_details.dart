@@ -20,6 +20,7 @@ class ShopDetails extends StatefulWidget {
   final String service;
   final double rating;
   final int i;
+  final String address;
 
   ShopDetails(
       {this.i,
@@ -29,7 +30,8 @@ class ShopDetails extends StatefulWidget {
       this.number,
       this.service,
       this.rating,
-      this.model});
+      this.model,
+      this.address});
   @override
   _ShopDetailsState createState() => _ShopDetailsState();
 }
@@ -54,7 +56,8 @@ class _ShopDetailsState extends State<ShopDetails> {
   @override
   void initState() {
     UsersList.clear();
-
+    print("483948230948230948239");
+    print(widget.address);
     widget.model.getShopsData().then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) => LawyerList.add(f.data));
       setState(() {});
@@ -285,7 +288,7 @@ class _ShopDetailsState extends State<ShopDetails> {
             _buildShopEmail(widget.email),
             _buildPhone(widget.number),
             _buildServices(widget.service),
-            _buildAddress(widget.number),
+            _buildAddress(widget.address),
           ],
         ),
       ),
