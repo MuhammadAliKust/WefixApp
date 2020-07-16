@@ -129,51 +129,56 @@ class _ShopDetailsState extends State<ShopDetails> {
                 .collection('Shops')
                 .getDocuments()
                 .then((QuerySnapshot snapshot) {
-              snapshot.documents[i].data['array'].forEach((data) {
-                count = (data['rating']).toDouble() + count;
+              snapshot.documents[widget.i].data['array'].forEach((data) {
+                // count = (data['rating']).toDouble() + count;
 
+                count = (data['rating']).toDouble() + count;
                 setState(() {
-                  length = snapshot.documents[i].data['array'].length;
+                  length = snapshot.documents[widget.i].data['array'].length;
                 });
-                // print('${count / length}');
               });
+              getRating() async {
+                final_rating = count / (length + 1);
+                await final_rating;
+              }
+
               print("===================================");
+              setState(() {
+                getRating();
+              });
+
+              getRating().then((value) {
+                Firestore.instance
+                    .collection('Shops')
+                    .document(LawyerList[i]['id'])
+                    .setData({
+                  'name': LawyerList[i]['name'],
+                  // address: snapshot.data.documents[i].data['address'],
+                  'number': LawyerList[i]['contact'],
+                  'uid': '1',
+                  'email': LawyerList[i]['email'],
+                  'services': LawyerList[i]['services'],
+                  'rating': final_rating,
+                  'array': FieldValue.arrayUnion([
+                    {
+                      'name': UsersList[0]['name'],
+                      'review': text.text,
+                      'rating': rating.toInt()
+                    }
+                  ])
+                }, merge: true);
+                stars.clear();
+                text.clear();
+                rating = 0;
+              });
 
               print(final_rating);
-              print(rating);
-              final_rating = count / (length + 1);
-              print(count);
               count = 0;
             });
             print("%%%%%%%%%%%%");
             print(length);
-            //  var length = LawyerList[i]['array'];
-
             _formKey.currentState.save();
-            print('^^^^^^^^^^^^^^^^^^^^^^^^^^');
-            await print(final_rating);
-            Firestore.instance
-                .collection('Shops')
-                .document(LawyerList[i]['id'])
-                .setData({
-              'name': LawyerList[i]['name'],
-              // address: snapshot.data.documents[i].data['address'],
-              'number': LawyerList[i]['contact'],
-              'uid': '1',
-              'email': LawyerList[i]['email'],
-              'services': LawyerList[i]['services'],
-              'rating': final_rating,
-              'array': FieldValue.arrayUnion([
-                {
-                  'name': UsersList[0]['name'],
-                  'review': text.text,
-                  'rating': rating.toInt()
-                }
-              ])
-            }, merge: true);
-            stars.clear();
-            text.clear();
-            rating = 0;
+
             Navigator.pop(context);
           },
         )
@@ -353,7 +358,7 @@ class _ShopDetailsState extends State<ShopDetails> {
             .headline5
             .merge(TextStyle(color: Colors.blueGrey)),
       ),
-      title: Text("Tap to view detailed Reviews"),
+      title: Text("Tap to give your feedback."),
       onTap: () {
         showDialog(
             barrierDismissible: false,

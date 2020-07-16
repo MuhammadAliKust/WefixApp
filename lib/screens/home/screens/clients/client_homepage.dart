@@ -296,28 +296,9 @@ class _ClientHomePageState extends State<ClientHomePage> {
     setState(() {});
   }
 
-  get shopRating {
-    return final_rating;
-  }
+ 
 
-  void setRating(int i) async {
-    Firestore.instance
-        .collection('Shops')
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      snapshot.documents[i].data['array'].forEach((data) {
-        count = (data['rating']).toDouble() + count;
-        var length = snapshot.documents[i].data['array'].length;
-
-        // print('${count / length}');
-        final_rating = count / length;
-      });
-      print("===================================");
-      print(count);
-      print(final_rating);
-      count = 0;
-    });
-  }
+  
 
   Widget _buildCard(BuildContext context, int i) {
     return Padding(
