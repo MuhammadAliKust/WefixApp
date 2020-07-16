@@ -95,6 +95,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
       }
     }
     setState(() {});
+    print(_filteredList);
   }
 
   Widget _buildScreenUI() {
@@ -130,38 +131,70 @@ class _ClientHomePageState extends State<ClientHomePage> {
     return Container(
       child: Expanded(
         child: Container(
-          child: ListView.builder(
-              itemCount: _filteredList.isEmpty
-                  ? LawyerList.length
-                  : _filteredList.length,
-              itemBuilder: (context, i) {
-                return GestureDetector(
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    child: _buildCard(context, i),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ShopDetails(
-                              model: widget.model,
-                              i: i,
-                              address: LawyerList[i]['address'],
-                              image: LawyerList[i]['image'],
-                              name: LawyerList[i]['name'],
-                              email: LawyerList[i]['email'],
-                              number: LawyerList[i]['contact'],
-                              service: LawyerList[i]['services'],
-                              rating: LawyerList[i]['rating'].toDouble(),
-                            )));
-                    // showDialog(
-                    //     barrierDismissible: false,
-                    //     context: context,
-                    //     child: Form(
-                    //         key: _formKey, child: _buildDialog(context, i)));
-                  },
-                );
-              }),
+          child: _filteredList.isEmpty
+              ? ListView.builder(
+                  itemCount: LawyerList.length,
+                  itemBuilder: (context, li) {
+                    return GestureDetector(
+                      child: Card(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        child: _buildCard(context, li, LawyerList),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ShopDetails(
+                                  id: LawyerList[li]['id'],
+                                  model: widget.model,
+                                  i: li,
+                                  address: LawyerList[li]['address'],
+                                  image: LawyerList[li]['image'],
+                                  name: LawyerList[li]['name'],
+                                  email: LawyerList[li]['email'],
+                                  number: LawyerList[li]['contact'],
+                                  service: LawyerList[li]['services'],
+                                  rating: LawyerList[li]['rating'].toDouble(),
+                                )));
+                        // showDialog(
+                        //     barrierDismissible: false,
+                        //     context: context,
+                        //     child: Form(
+                        //         key: _formKey, child: _buildDialog(context, i)));
+                      },
+                    );
+                  })
+              : ListView.builder(
+                  itemCount: _filteredList.length,
+                  itemBuilder: (context, fi) {
+                    return GestureDetector(
+                      child: Card(
+                        color: Colors.transparent,
+                        elevation: 0,
+                        child: _buildCard(context, fi, _filteredList),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ShopDetails(
+                                  id: _filteredList[fi]['id'],
+                                  model: widget.model,
+                                  i: fi,
+                                  address: _filteredList[fi]['address'],
+                                  image: _filteredList[fi]['image'],
+                                  name: _filteredList[fi]['name'],
+                                  email: _filteredList[fi]['email'],
+                                  number: _filteredList[fi]['contact'],
+                                  service: _filteredList[fi]['services'],
+                                  rating:
+                                      _filteredList[fi]['rating'].toDouble(),
+                                )));
+                        // showDialog(
+                        //     barrierDismissible: false,
+                        //     context: context,
+                        //     child: Form(
+                        //         key: _formKey, child: _buildDialog(context, i)));
+                      },
+                    );
+                  }),
         ),
       ),
     );
@@ -297,19 +330,19 @@ class _ClientHomePageState extends State<ClientHomePage> {
     setState(() {});
   }
 
-  Widget _buildCard(BuildContext context, int i) {
+  Widget _buildCard(BuildContext context, int i, List list) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0),
         child: Column(children: <Widget>[
-          _buildContainer(context, i),
-          _buildListTile(context, i),
+          _buildContainer(context, i, list),
+          _buildListTile(context, i, list),
           SizedBox(
             height: 20,
           )
         ]));
   }
 
-  Widget _buildContainer(BuildContext context, int i) {
+  Widget _buildContainer(BuildContext context, int i, List list) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 170,
@@ -323,25 +356,25 @@ class _ClientHomePageState extends State<ClientHomePage> {
           child: FadeInImage.assetNetwork(
             placeholder: 'assets/img/loading.gif',
             placeholderScale: 20,
-            image: LawyerList[i]['image'],
+            image: list[i]['image'],
             fit: BoxFit.cover,
           )),
     );
   }
 
-  Widget _buildListTile(BuildContext context, int i) {
+  Widget _buildListTile(BuildContext context, int i, List list) {
     return Container(
       color: Colors.blueGrey,
       child: ListTile(
-          title: _buildTitle(context, i),
-          subtitle: _buildRatings(context, i),
-          trailing: _buildTrailing(context, i)),
+          title: _buildTitle(context, i, list),
+          subtitle: _buildRatings(context, i, list),
+          trailing: _buildTrailing(context, i, list)),
     );
   }
 
-  Widget _buildTitle(BuildContext context, int i) {
+  Widget _buildTitle(BuildContext context, int i, List list) {
     return Text(
-      _filteredList.isEmpty ? LawyerList[i]['name'] : _filteredList[i]['name'],
+      _filteredList.isEmpty ? list[i]['name'] : _filteredList[i]['name'],
       style: Theme.of(context)
           .textTheme
           .title
@@ -349,11 +382,11 @@ class _ClientHomePageState extends State<ClientHomePage> {
     );
   }
 
-  Widget _buildRatings(BuildContext context, int i) {
+  Widget _buildRatings(BuildContext context, int i, List list) {
     return SmoothStarRating(
       color: Colors.yellow,
       borderColor: Colors.grey,
-      rating: LawyerList[i]['rating'].toDouble(),
+      rating: list[i]['rating'].toDouble(),
       isReadOnly: true,
       size: 20,
       filledIconData: Icons.star,
@@ -365,50 +398,50 @@ class _ClientHomePageState extends State<ClientHomePage> {
     );
   }
 
-  Widget _buildTrailing(BuildContext context, int i) {
+  Widget _buildTrailing(BuildContext context, int i, List list) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         IconButton(
           icon: Icon(Icons.chat, color: Colors.white),
           onPressed: () {
-            sendMessage(LawyerList[i]['username']);
+            sendMessage(list[i]['username']);
             // String chatRoomId = getChatRoomId(Constants.myName, userName);
             // Navigator.of(context).push(MaterialPageRoute(
             //     builder: (context) => sendMessage(LawyerList[i]['name'])));
           },
         ),
         IconButton(
-            icon: !FavShopsList.contains(LawyerList[i]['id'])
+            icon: !FavShopsList.contains(list[i]['id'])
                 ? Icon(Icons.favorite_border, color: Colors.red)
                 : Icon(
                     Icons.favorite,
                     color: Colors.redAccent,
                   ),
             onPressed: () async {
-              if (!FavShopsList.contains(LawyerList[i]['id'])) {
+              if (!FavShopsList.contains(list[i]['id'])) {
                 await widget.model.addFavShops(
-                  image: LawyerList[i]['image'],
-                  selID: LawyerList[i]['id'],
-                  name: LawyerList[i]['name'],
+                  image: list[i]['image'],
+                  selID: list[i]['id'],
+                  name: list[i]['name'],
                   // address: snapshot.data.documents[i].data['address'],
-                  number: LawyerList[i]['contact'],
+                  number: list[i]['contact'],
                   uid: '1',
-                  rating: LawyerList[i]['rating'].toDouble(),
-                  email: LawyerList[i]['email'],
-                  services: LawyerList[i]['services'],
+                  rating: list[i]['rating'].toDouble(),
+                  email: list[i]['email'],
+                  services: list[i]['services'],
                 );
                 _showScaffold("Added to Favourite.");
               }
               setState(() {
-                FavShopsList.add(LawyerList[i]['id']);
+                FavShopsList.add(list[i]['id']);
               });
             }),
         IconButton(
           onPressed: () {
             try {
-              print(LawyerList[i]['address']);
-              MapsLauncher.launchQuery(LawyerList[i]['address']);
+              print(list[i]['address']);
+              MapsLauncher.launchQuery(list[i]['address']);
             } catch (e) {
               print(e);
             }
