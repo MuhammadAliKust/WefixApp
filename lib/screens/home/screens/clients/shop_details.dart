@@ -12,6 +12,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ShopDetails extends StatefulWidget {
+  final String id;
   final MainModel model;
   final String image;
   final String name;
@@ -23,7 +24,8 @@ class ShopDetails extends StatefulWidget {
   final String address;
 
   ShopDetails(
-      {this.i,
+      {this.id,
+      this.i,
       this.image,
       this.name,
       this.email,
@@ -56,8 +58,6 @@ class _ShopDetailsState extends State<ShopDetails> {
   @override
   void initState() {
     UsersList.clear();
-    print("483948230948230948239");
-    print(widget.address);
     widget.model.getShopsData().then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((f) => LawyerList.add(f.data));
       setState(() {});
@@ -68,6 +68,8 @@ class _ShopDetailsState extends State<ShopDetails> {
       setState(() {});
     });
     super.initState();
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&");
+    print(widget.id);
   }
 
   Widget _buildDialog(context, i) {
@@ -153,14 +155,14 @@ class _ShopDetailsState extends State<ShopDetails> {
               getRating().then((value) {
                 Firestore.instance
                     .collection('Shops')
-                    .document(LawyerList[i]['id'])
+                    .document(widget.id)
                     .setData({
-                  'name': LawyerList[i]['name'],
+                  'name': LawyerList[widget.i]['name'],
                   // address: snapshot.data.documents[i].data['address'],
-                  'number': LawyerList[i]['contact'],
+                  'number': LawyerList[widget.i]['contact'],
                   'uid': '1',
-                  'email': LawyerList[i]['email'],
-                  'services': LawyerList[i]['services'],
+                  'email': LawyerList[widget.i]['email'],
+                  'services': LawyerList[widget.i]['services'],
                   'rating': final_rating,
                   'array': FieldValue.arrayUnion([
                     {
@@ -190,8 +192,6 @@ class _ShopDetailsState extends State<ShopDetails> {
   }
 
   Widget _buildScreenUI(BuildContext context) {
-    print("1===========================");
-    print(myImageUrl.toString());
     return SingleChildScrollView(
       child: Column(children: <Widget>[
         _buildImage(context, widget.image),
