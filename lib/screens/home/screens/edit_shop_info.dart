@@ -23,7 +23,7 @@ class EditShopInfo extends StatefulWidget {
 class _EditShopInfoState extends State<EditShopInfo> {
   static final kInitialPosition = LatLng(-33.8567844, 151.213108);
   String address = 'null';
-  String apiKey = "AIzaSyC9pxEiVyuGXjWMhUmhZYd-EDgVqLLViuk";
+  String apiKey = "AIzaSyDBmMM2hg9tVOVdP87ihxFxfaaqOWlzo8w";
   PickResult selectedPlace;
   Future<File> imageFile;
   Map<String, dynamic> updatedData = {
@@ -333,44 +333,39 @@ class _EditShopInfoState extends State<EditShopInfo> {
             ],
           ),
           onPressed: () {
-            isPressed = true;
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return PlacePicker(
-                        apiKey: apiKey,
-                        initialPosition: kInitialPosition,
-                        useCurrentLocation: true,
-                        //usePlaceDetailSearch: true,
-                        onPlacePicked: (result) {
-                          selectedPlace = result;
-                          print("===========================");
-                          print(selectedPlace.formattedAddress);
-                          print("===========================");
-                          setState(() {
-                            updatedData['address'] =
-                                selectedPlace.formattedAddress;
-                            snapshot = selectedPlace.formattedAddress;
-                          });
-
-                          model.setResult(updatedData['address']);
-                          _formKey.currentState.save();
-                          model
-                              .updateData(
-                                  name: updatedData['name'],
-                                  address: updatedData['address'],
-                                  number: updatedData['contact'],
-                                  email: updatedData['email'],
-                                  services: updatedData['services'])
-                              .then((val) {});
-                          Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return PlacePicker(
+                      apiKey: apiKey,
+                      initialPosition: kInitialPosition,
+                      useCurrentLocation: true,
+                      //usePlaceDetailSearch: true,
+                      onPlacePicked: (result) {
+                        selectedPlace = result;
+                        print("===========================");
+                        print(selectedPlace.formattedAddress);
+                        print("===========================");
+                        setState(() {
+                          updatedData['address'] =
+                              selectedPlace.formattedAddress;
+                          snapshot = selectedPlace.formattedAddress;
                         });
-                  },
-                ),
-              );
-            }
+
+                        model.setResult(updatedData['address']);
+                        _formKey.currentState.save();
+                        model.updateData(
+                            name: updatedData['name'],
+                            address: updatedData['address'],
+                            number: updatedData['contact'],
+                            email: updatedData['email'],
+                            services: updatedData['services']);
+                        Navigator.of(context).pop();
+                      });
+                },
+              ),
+            );
           },
         );
       },
